@@ -10,6 +10,9 @@ import SwiftUI
 struct ProfileView: View {
     
     //MARK: - PROPERTIES AND INITIALIZERS
+    @State private var selectedFilter: TweetFilterViewModel = .tweets
+    @Namespace var animation
+    @Environment(\.presentationMode) var mode
     
     //MARK: - BODY
     var body: some View {
@@ -20,6 +23,10 @@ struct ProfileView: View {
             actionButtons
             
             userInfoDetails
+            
+            tweetFilterBar
+            
+            tweetsView
             
             Spacer()
         } //: VSTACK
@@ -37,7 +44,7 @@ extension ProfileView {
             
             VStack {
                 Button {
-                    //action
+                    mode.wrappedValue.dismiss()
                 } label: {
                     Image(systemName: "arrow.left")
                         .resizable()
@@ -112,29 +119,55 @@ extension ProfileView {
             .font(.caption)
             .foregroundColor(.gray)
             
-            HStack(spacing: 24) {
-                HStack(spacing: 4) {
-                    Text("404")
-                        .font(.subheadline).bold()
-                    
-                    Text("Following")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }//: HSTACK
-                
-                HStack(spacing: 4) {
-                    Text("40M")
-                        .font(.subheadline).bold()
-                    
-                    Text("Followers")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }//: HSTACK
-            } //: HSTACK
-            .padding(.vertical)
+            UserStatsView()
+                .padding(.vertical)
             
         } //: VSTACK
         .padding(.horizontal)
+    }
+    
+    var tweetFilterBar: some View {
+        HStack {
+            ForEach(TweetFilterViewModel.allCases, id: \.rawValue) { item in
+                VStack {
+                    Text(item.title)
+                        .font(.subheadline)
+                        .fontWeight(selectedFilter == item ? .semibold : .regular)
+                        .foregroundColor(selectedFilter == item ? .black : .gray)
+                    
+                    if selectedFilter == item {
+                        Capsule()
+                            .foregroundColor(Color(.systemBlue))
+                            .frame(height: 3.0)
+                            .matchedGeometryEffect(id: "filter", in: animation)
+                    } else {
+                        Capsule()
+                            .foregroundColor(Color(.clear))
+                            .frame(height: 3.0)
+                    }
+                } //: VSTACK
+                .onTapGesture {
+                    withAnimation(.easeOut) {
+                        self.selectedFilter = item
+                    }
+                }
+            }
+            
+        } //: HSTACK
+        .overlay(Divider().offset(x: 0, y: 16))
+    }
+    
+    var tweetsView: some View {
+        ScrollView {
+            
+            LazyVStack {
+                ForEach(0...9, id: \.self) { _ in
+                    TweetRowView()
+                        .padding()
+                }
+            } //: VSTACK
+            
+        } //: SCROLL VIEW
     }
     
 }
