@@ -14,7 +14,7 @@ struct SideMenuView: View {
     //MARK: - BODY
     var body: some View {
         
-        VStack {
+        VStack(alignment: .leading, spacing: 20) {
             
             VStack(alignment: .leading) {
                 Circle()
@@ -33,6 +33,41 @@ struct SideMenuView: View {
                     .padding(.vertical)
                 
             } //: VSTACK
+            .padding(.leading)
+            
+            ForEach(SideMenuViewModel.allCases, id: \.rawValue) { viewModel in
+                switch viewModel {
+                case .profile:
+                    NavigationLink {
+                        ProfileView()
+                    } label: {
+                        SideMenuRowView(viewModel: viewModel)
+                    }
+                    
+                case .lists:
+                    NavigationLink {
+                        
+                    } label: {
+                        SideMenuRowView(viewModel: viewModel)
+                    }
+                    
+                case .bookmarks:
+                    NavigationLink {
+                        
+                    } label: {
+                        SideMenuRowView(viewModel: viewModel)
+                    }
+                    
+                case .logout:
+                    NavigationLink {
+                        
+                    } label: {
+                        SideMenuRowView(viewModel: viewModel)
+                    }
+                }
+            }
+            
+            Spacer()
             
         } //: VSTACK
         

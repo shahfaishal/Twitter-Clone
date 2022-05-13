@@ -8,12 +8,64 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    //MARK: - PROPERTIES AND INTITALIZERS
+    @State private var showMenu: Bool = false
+    
+    //MARK: - BODY
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        
+        ZStack(alignment: .topLeading) {
+            MainTabView()
+                .navigationBarHidden(showMenu)
+            
+            if showMenu {
+                ZStack {
+                    Color(UIColor.black)
+                        .opacity(showMenu ? 0.25 : 0)
+                } //: ZSTACK
+                .ignoresSafeArea()
+                .onTapGesture {
+                    withAnimation(.easeOut(duration: 0.5)) {
+                        showMenu = false
+                    }
+                }
+            }
+            
+            SideMenuView()
+                .frame(width: 300)
+                .offset(x: showMenu ? 0 : -300, y: 0)
+                .background(showMenu ? Color.white : Color.clear)
+        } //: ZSTACK
+        .navigationTitle("Home")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    withAnimation(.easeIn(duration: 0.5)) {
+                        showMenu.toggle()
+                    }
+                } label: {
+                    Circle()
+                        .frame(width: 32, height: 32)
+                }
+            }
+            
+//            ToolbarItem(placement: .navigationBarTrailing) {
+//                Button {
+//
+//                } label: {
+//                    Image(systemName: "refresh")
+//                }
+//            }
+        }
+        .onAppear {
+            showMenu = false
+        }
     }
 }
 
+//MARK: - PREVIEW
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
