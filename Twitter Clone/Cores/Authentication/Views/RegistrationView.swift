@@ -10,10 +10,73 @@ import SwiftUI
 struct RegistrationView: View {
     
     //MARK: - PROPERTIES AND INITIALIZERS
+    @State private var email: String = ""
+    @State private var username: String = ""
+    @State private var fullName: String = ""
+    @State private var password: String = ""
+    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var viewModel : AuthViewModel
     
     //MARK: - BODY
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        
+        VStack {
+            AuthHeaderView(title1: "Get started,", title2: "Create your account")
+                        
+            VStack(spacing: 40) {
+                CustomInputField(imageName: "envelope", placeholderText: "Email", text: $email)
+                
+                CustomInputField(imageName: "person", placeholderText: "Username", text: $username)
+                
+                CustomInputField(imageName: "person", placeholderText: "Full name", text: $fullName)
+                
+                CustomInputField(imageName: "lock", placeholderText: "Password", text: $password)
+            } //: VSTACK
+            .padding(.horizontal, 32)
+            .padding(.top, 44)
+            
+            Button {
+                viewModel.register(withEmail: email, username: username, fullName: fullName, password: password)
+            } label: {
+                Text("Sign Up")
+                    .font(.headline)
+                    .frame(width: UIScreen.main.bounds.width-32*2, height: 50)
+                    .foregroundColor(.white)
+                    .background(Color(UIColor.systemBlue))
+                    .clipShape(Capsule())
+                    .padding()
+            }
+            
+            Spacer()
+            
+            Button {
+                presentationMode.wrappedValue.dismiss()
+            } label: {
+                Text("Already have an account?")
+                    .font(.footnote)
+
+                Text("Sign In")
+                    .font(.footnote)
+                    .fontWeight(.semibold)
+            }
+            .padding(.bottom, 32)
+            
+//            NavigationLink {
+//                RegistrationView()
+//            } label: {
+//                Text("Already have an account?")
+//                    .font(.footnote)
+//
+//                Text("Sign In")
+//                    .font(.footnote)
+//                    .fontWeight(.semibold)
+//            }
+//            .padding(.bottom, 32)
+//            .foregroundColor(Color(UIColor.systemBlue))
+        } //: VSTACK
+        .ignoresSafeArea()
+        .navigationBarHidden(true)
+        
     }
 }
 

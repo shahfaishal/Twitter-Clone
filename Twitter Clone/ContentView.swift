@@ -11,10 +11,29 @@ struct ContentView: View {
     
     //MARK: - PROPERTIES AND INTITALIZERS
     @State private var showMenu: Bool = false
+    @EnvironmentObject var viewModel : AuthViewModel
     
     //MARK: - BODY
     var body: some View {
         
+        Group {
+            if viewModel.userSession == nil {
+                //NO USER LOGGED IN
+                LoginView()
+            } else {
+                //HAVE A LOGGED IN USER
+                mainInterfaceView
+            }
+        } //: GROUP
+        
+    }
+}
+
+
+//MARK: - EXTENSION
+extension ContentView {
+    
+    var mainInterfaceView: some View {
         ZStack(alignment: .topLeading) {
             MainTabView()
                 .navigationBarHidden(showMenu)
@@ -50,20 +69,14 @@ struct ContentView: View {
                         .frame(width: 32, height: 32)
                 }
             }
-            
-//            ToolbarItem(placement: .navigationBarTrailing) {
-//                Button {
-//
-//                } label: {
-//                    Image(systemName: "refresh")
-//                }
-//            }
         }
         .onAppear {
             showMenu = false
         }
     }
+    
 }
+
 
 //MARK: - PREVIEW
 struct ContentView_Previews: PreviewProvider {

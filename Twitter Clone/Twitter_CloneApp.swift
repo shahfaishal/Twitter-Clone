@@ -6,16 +6,26 @@
 //
 
 import SwiftUI
+import Firebase
 
 @main
 struct Twitter_CloneApp: App {
+    
+    //MARK: - PROPERTIES AND INITIALIZERS
+    @StateObject var viewModel = AuthViewModel()
+    
+    init() {
+        FirebaseApp.configure()
+    }
+    
+    //MARK: - BODY
     var body: some Scene {
         WindowGroup {
             
             NavigationView {
-//                ContentView()
-                LoginView()
+                ContentView()
             } //: NAVIGATION VIEW
+            .environmentObject(viewModel)
             
         }
     }
