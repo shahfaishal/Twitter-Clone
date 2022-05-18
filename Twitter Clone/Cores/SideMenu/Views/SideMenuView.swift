@@ -10,6 +10,7 @@ import SwiftUI
 struct SideMenuView: View {
     
     //MARK: - PROPERTIES AND INITIALIZERS
+    @EnvironmentObject var viewModel: AuthViewModel
     
     //MARK: - BODY
     var body: some View {
@@ -35,34 +36,34 @@ struct SideMenuView: View {
             } //: VSTACK
             .padding(.leading)
             
-            ForEach(SideMenuViewModel.allCases, id: \.rawValue) { viewModel in
-                switch viewModel {
+            ForEach(SideMenuViewModel.allCases, id: \.rawValue) { item in
+                switch item {
                 case .profile:
                     NavigationLink {
                         ProfileView()
                     } label: {
-                        SideMenuRowView(viewModel: viewModel)
+                        SideMenuRowView(viewModel: item)
                     }
                     
                 case .lists:
                     NavigationLink {
                         
                     } label: {
-                        SideMenuRowView(viewModel: viewModel)
+                        SideMenuRowView(viewModel: item)
                     }
                     
                 case .bookmarks:
                     NavigationLink {
                         
                     } label: {
-                        SideMenuRowView(viewModel: viewModel)
+                        SideMenuRowView(viewModel: item)
                     }
                     
                 case .logout:
-                    NavigationLink {
-                        
+                    Button {
+                        viewModel.signOut()
                     } label: {
-                        SideMenuRowView(viewModel: viewModel)
+                        SideMenuRowView(viewModel: item)
                     }
                 }
             }
