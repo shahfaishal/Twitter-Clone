@@ -22,6 +22,7 @@ struct LoginView: View {
                         
             VStack(spacing: 40) {
                 CustomInputField(imageName: "envelope", placeholderText: "Email", text: $email)
+                    .keyboardType(.emailAddress)
                 
                 CustomInputField(imageName: "lock", placeholderText: "Password", isSecureField: true, text: $password)
             } //: VSTACK

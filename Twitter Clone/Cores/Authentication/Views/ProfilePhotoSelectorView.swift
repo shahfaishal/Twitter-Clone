@@ -13,6 +13,7 @@ struct ProfilePhotoSelectorView: View {
     @State private var showImagePicker = false
     @State private var selectedImage: UIImage?
     @State private var profileImage: Image?
+    @EnvironmentObject var viewModel: AuthViewModel
     
     //MARK: - BODY
     var body: some View {
@@ -48,6 +49,20 @@ struct ProfilePhotoSelectorView: View {
                 }
             } //: ZSTACK
             .padding(.top, 40)
+            
+            if let selectedImage = selectedImage {
+                Button {
+                    viewModel.uploadProfileImage(selectedImage)
+                } label: {
+                    Text("Continue")
+                        .font(.headline)
+                        .frame(width: UIScreen.main.bounds.width-32*2, height: 50)
+                        .foregroundColor(.white)
+                        .background(Color(UIColor.systemBlue))
+                        .clipShape(Capsule())
+                        .padding()
+                }
+            }
             
             Spacer()
         } //: VSTACK

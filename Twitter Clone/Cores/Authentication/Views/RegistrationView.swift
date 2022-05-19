@@ -15,7 +15,7 @@ struct RegistrationView: View {
     @State private var fullName: String = ""
     @State private var password: String = ""
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var viewModel : AuthViewModel
+    @EnvironmentObject var viewModel: AuthViewModel
     
     //MARK: - BODY
     var body: some View {
@@ -27,8 +27,10 @@ struct RegistrationView: View {
                         
             VStack(spacing: 40) {
                 CustomInputField(imageName: "envelope", placeholderText: "Email", text: $email)
+                    .keyboardType(.emailAddress)
                 
                 CustomInputField(imageName: "person", placeholderText: "Username", text: $username)
+                    .keyboardType(.emailAddress)
                 
                 CustomInputField(imageName: "person", placeholderText: "Full name", text: $fullName)
                 
@@ -62,19 +64,6 @@ struct RegistrationView: View {
                     .fontWeight(.semibold)
             }
             .padding(.bottom, 32)
-            
-//            NavigationLink {
-//                RegistrationView()
-//            } label: {
-//                Text("Already have an account?")
-//                    .font(.footnote)
-//
-//                Text("Sign In")
-//                    .font(.footnote)
-//                    .fontWeight(.semibold)
-//            }
-//            .padding(.bottom, 32)
-//            .foregroundColor(Color(UIColor.systemBlue))
         } //: VSTACK
         .ignoresSafeArea()
         .navigationBarHidden(true)
