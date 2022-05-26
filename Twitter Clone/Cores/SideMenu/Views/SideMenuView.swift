@@ -10,67 +10,72 @@ import SwiftUI
 struct SideMenuView: View {
     
     //MARK: - PROPERTIES AND INITIALIZERS
-    @EnvironmentObject var viewModel: AuthViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     //MARK: - BODY
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 20) {
-            
-            VStack(alignment: .leading) {
-                Circle()
-                    .frame(width: 48, height: 48)
+        if let user = authViewModel.currentUser {
+            VStack(alignment: .leading, spacing: 20) {
                 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Bruce Wayne")
-                        .font(.headline)
+                VStack(alignment: .leading) {
+                    Image(uiImage: (user.profileImageString.toImage() ?? UIImage(named: "profile")!))
+                        .resizable()
+                        .scaledToFill()
+                        .clipShape(Circle())
+                        .frame(width: 48, height: 48)
                     
-                    Text("@batman")
-                        .font(.caption)
-                        .foregroundColor(.gray)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(user.fullName)
+                            .font(.headline)
+                        
+                        Text("@\(user.username)")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                    }
+                    
+                    UserStatsView()
+                        .padding(.vertical)
+                    
+                } //: VSTACK
+                .padding(.leading)
+                
+                ForEach(SideMenuViewModel.allCases, id: \.rawValue) { item in
+                    switch item {
+                    case .profile:
+                        NavigationLink {
+                            ProfileView(user: user)
+                        } label: {
+                            SideMenuRowView(viewModel: item)
+                        }
+                        
+                    case .lists:
+                        NavigationLink {
+                            
+                        } label: {
+                            SideMenuRowView(viewModel: item)
+                        }
+                        
+                    case .bookmarks:
+                        NavigationLink {
+                            
+                        } label: {
+                            SideMenuRowView(viewModel: item)
+                        }
+                        
+                    case .logout:
+                        Button {
+                            authViewModel.signOut()
+                        } label: {
+                            SideMenuRowView(viewModel: item)
+                        }
+                    }
                 }
                 
-                UserStatsView()
-                    .padding(.vertical)
+                Spacer()
                 
             } //: VSTACK
-            .padding(.leading)
-            
-            ForEach(SideMenuViewModel.allCases, id: \.rawValue) { item in
-                switch item {
-                case .profile:
-                    NavigationLink {
-                        ProfileView()
-                    } label: {
-                        SideMenuRowView(viewModel: item)
-                    }
-                    
-                case .lists:
-                    NavigationLink {
-                        
-                    } label: {
-                        SideMenuRowView(viewModel: item)
-                    }
-                    
-                case .bookmarks:
-                    NavigationLink {
-                        
-                    } label: {
-                        SideMenuRowView(viewModel: item)
-                    }
-                    
-                case .logout:
-                    Button {
-                        viewModel.signOut()
-                    } label: {
-                        SideMenuRowView(viewModel: item)
-                    }
-                }
-            }
-            
-            Spacer()
-            
-        } //: VSTACK
+        }
         
     }
 }

@@ -11,13 +11,13 @@ struct ContentView: View {
     
     //MARK: - PROPERTIES AND INTITALIZERS
     @State private var showMenu: Bool = false
-    @EnvironmentObject var viewModel : AuthViewModel
+    @EnvironmentObject var authViewModel : AuthViewModel
     
     //MARK: - BODY
     var body: some View {
         
         Group {
-            if viewModel.userSession == nil {
+            if authViewModel.userSession == nil {
                 //NO USER LOGGED IN
                 LoginView()
             } else {
@@ -54,19 +54,24 @@ extension ContentView {
             SideMenuView()
                 .frame(width: 300)
                 .offset(x: showMenu ? 0 : -300, y: 0)
-                .background(showMenu ? Color.white : Color.clear)
+                .background(showMenu ? Color(UIColor.systemBackground) : Color.clear)
         } //: ZSTACK
         .navigationTitle("Home")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    withAnimation(.easeIn(duration: 0.5)) {
-                        showMenu.toggle()
+                if let user = authViewModel.currentUser {
+                    Button {
+                        withAnimation(.easeIn(duration: 0.5)) {
+                            showMenu.toggle()
+                        }
+                    } label: {
+                        Image(uiImage: (user.profileImageString.toImage() ?? UIImage(named: "profile")!))
+                            .resizable()
+                            .scaledToFill()
+                            .clipShape(Circle())
+                            .frame(width: 32, height: 32)
                     }
-                } label: {
-                    Circle()
-                        .frame(width: 32, height: 32)
                 }
             }
         }

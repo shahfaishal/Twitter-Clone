@@ -13,6 +13,11 @@ struct ProfileView: View {
     @State private var selectedFilter: TweetFilterViewModel = .tweets
     @Namespace var animation
     @Environment(\.presentationMode) var mode
+    private var user: User
+    
+    init(user: User) {
+        self.user = user
+    }
     
     //MARK: - BODY
     var body: some View {
@@ -30,6 +35,7 @@ struct ProfileView: View {
             
             Spacer()
         } //: VSTACK
+        .navigationBarHidden(true)
     }
 }
 
@@ -52,9 +58,12 @@ extension ProfileView {
                         .foregroundColor(.white)
                 }
                 
-                Circle()
+                Image(uiImage: (user.profileImageString.toImage() ?? UIImage(named: "profile")!))
+                    .resizable()
+                    .scaledToFill()
+                    .clipShape(Circle())
                     .frame(width: 72, height: 72)
-                .offset(x: 16, y: 24)
+                    .offset(x: 16, y: 24)
             } //: VSTACK
             
         } //: ZSTACK
@@ -75,7 +84,7 @@ extension ProfileView {
             } label: {
                 Text("Edit Profile")
                     .font(.subheadline)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color(UIColor.label))
                     .frame(width: 120, height: 32)
                     .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.gray, lineWidth: 0.75))
             }
@@ -87,14 +96,14 @@ extension ProfileView {
         VStack(alignment: .leading, spacing: 4) {
             
             HStack {
-                Text("Bruce Wayne")
+                Text(user.fullName)
                     .font(.title2).bold()
                 
                 Image(systemName: "checkmark.seal.fill")
                     .foregroundColor(Color(UIColor.systemBlue))
             } //: HSTACK
             
-            Text("@batman")
+            Text("@\(user.username)")
                 .font(.caption)
                 .foregroundColor(.gray)
             
@@ -107,7 +116,7 @@ extension ProfileView {
                 HStack(spacing: 4) {
                     Image(systemName: "mappin.and.ellipse")
                     
-                    Text("Bruce Wayne")
+                    Text("Gotham, New York")
                 }//: HSTACK
                 
                 HStack(spacing: 4) {
@@ -133,7 +142,7 @@ extension ProfileView {
                     Text(item.title)
                         .font(.subheadline)
                         .fontWeight(selectedFilter == item ? .semibold : .regular)
-                        .foregroundColor(selectedFilter == item ? .black : .gray)
+                        .foregroundColor(selectedFilter == item ? Color(UIColor.label) : .gray)
                     
                     if selectedFilter == item {
                         Capsule()
@@ -176,6 +185,6 @@ extension ProfileView {
 //MARK: - PREVIEW
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileView()
+        ProfileView(user: User(fullName: "Bruce Wayne", username: "batman", profileImageString: (UIImage(named: "profile")?.toJpegString(compressionQuality: 1.0))!, email: "www.batman.com"))
     }
 }
